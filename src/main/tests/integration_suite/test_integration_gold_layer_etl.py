@@ -7,7 +7,7 @@ user = username[:username.index("@")].replace('.', '_')
 import sys
 import os 
 
-sys.path.append(os.path.abspath(f"/Workspace/Repos/{username}/cicd_with_databricks/src/main/python/gold/"))
+sys.path.append(os.path.abspath(f"/Workspace/Repos/{username}/cicd_with_databricks_GH/src/main/python/gold/"))
 
 # COMMAND ----------
 
