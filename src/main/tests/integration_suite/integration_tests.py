@@ -15,7 +15,7 @@ user = username[:username.index("@")].replace('.', '_')
 
 source_dataset = 'customers'
 target_path = f'/FileStore/{username}_bronze_db_test/'
-abs_path = f'/Repos/{username}/cicd_with_databricks/src/main/tests/'
+abs_path = f'/Repos/{username}/cicd_with_databricks_GH/src/main/tests/'
 
 # COMMAND ----------
 
@@ -39,7 +39,7 @@ dbutils.notebook.run(abs_path + "integration_suite/test_integration_silver_layer
 
 # COMMAND ----------
 
-dbutils.notebook.run(abs_path + "integration_suite/test_integration_gold_layer_etl", 300, {})
+dbutils.notebook.run(abs_path + "integration_suite/test_integration_gold_layer_etl", 300, {"env":env})
 
 # COMMAND ----------
 
