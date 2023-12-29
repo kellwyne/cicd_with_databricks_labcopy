@@ -33,13 +33,7 @@ jobs:
         env:
           DATABRICKS_HOST: ${{ secrets['DATABRICKS_HOST_PRD'] }}
           DATABRICKS_TOKEN: ${{ secrets['DATABRICKS_TOKEN_PRD'] }}
-          ENV: prod
-         new-cluster-json: >
-           {
-             "num_workers": 1,
-             "spark_version": "11.3.x-scala2.12",
-             "node_type_id": "Standard_DS3_v2"
-           }          
+          ENV: prod        
 
   # Validate, deploy, and then run the bundle.
   pipeline_update:

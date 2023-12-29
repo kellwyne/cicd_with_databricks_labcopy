@@ -8,7 +8,7 @@ resources:
       name: cicd_jobs
       job_clusters:
         - job_cluster_key: "cluster-setup"
-          existing_cluster_id: 1214-011430-j4lqjjs9
+          existing_cluster_id: "1214-011430-j4lqjjs9"
           tasks:
           - task_key: "setup-tables"
             job_cluster_key: "cluster-setup"           
