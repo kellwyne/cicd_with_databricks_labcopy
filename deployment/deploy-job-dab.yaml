@@ -6,84 +6,81 @@ resources:
   jobs:
     cicd_jobs:
       name: cicd_jobs
-      job_clusters:
-        - job_cluster_key: "cluster-setup"
+      tasks:
+        - task_key: "setup-tables"
+          existing_cluster_id: 1214-011430-j4lqjjs9          
+          notebook_task:
+            notebook_path: "/Repos/kellwyn.edwin@kotahi.co.nz/cicd_with_databricks_GH/src/main/python/setup/initiate_setup"      
+            base_parameters:
+              num_rows: "10000"
+              env: ""
+        - task_key: "bronze-customers"
           existing_cluster_id: 1214-011430-j4lqjjs9
-        tasks:
-          - task_key: "setup-tables"
-            existing_cluster_id: 1214-011430-j4lqjjs9          
-            notebook_task:
-              notebook_path: "/Repos/kellwyn.edwin@kotahi.co.nz/cicd_with_databricks_GH/src/main/python/setup/initiate_setup"      
-              base_parameters:
-                num_rows: "10000"
-                env: ""
-          - task_key: "bronze-customers"
-            existing_cluster_id: 1214-011430-j4lqjjs9
-            depends_on:
-              - task_key: "setup-tables"          
-            notebook_task:
-              notebook_path: "/Repos/kellwyn.edwin@kotahi.co.nz/cicd_with_databricks_GH/src/main/python/bronze/load_bronze_tables"
-              base_parameters:
-                source_dataset: "customers"
-                num_rows: "10000"
-                env: ""
-          - task_key: "bronze-orders"
-            existing_cluster_id: 1214-011430-j4lqjjs9
-            depends_on:
-              - task_key: "setup-tables"
-            notebook_task:
-              notebook_path: "/Repos/kellwyn.edwin@kotahi.co.nz/cicd_with_databricks_GH/src/main/python/bronze/load_bronze_tables"
-              base_parameters:
-                source_dataset: "orders"
-                num_rows: "10000"
-                env: ""
-          - task_key: "bronze-products"
-            existing_cluster_id: 1214-011430-j4lqjjs9
-            depends_on:
-              - task_key: "setup-tables"
-            notebook_task:
-              notebook_path: "/Repos/kellwyn.edwin@kotahi.co.nz/cicd_with_databricks_GH/src/main/python/bronze/load_bronze_tables"
-              base_parameters:
-                source_dataset: "products"
-                num_rows: "10000"
-                env: ""
-          - task_key: "bronze-sales"
-            existing_cluster_id: 1214-011430-j4lqjjs9
-            depends_on:
-              - task_key: "setup-tables" 
-            notebook_task:
-              notebook_path: "/Repos/kellwyn.edwin@kotahi.co.nz/cicd_with_databricks_GH/src/main/python/bronze/load_bronze_tables"
-              base_parameters:
-                source_dataset: "sales"
-                num_rows: "10000"
-                env: ""
-          - task_key: "standardize-silver"
-            existing_cluster_id: 1214-011430-j4lqjjs9
-            depends_on:
-              - task_key: "bronze-products"
-              - task_key: "bronze-sales"
-              - task_key: "bronze-orders"
-            notebook_task:
-              notebook_path: "/Repos/kellwyn.edwin@kotahi.co.nz/cicd_with_databricks_GH/src/main/python/silver/call_standardise_retail_dataset"
-              base_parameters:
-                env: ""
-          - task_key: "scd2-silver-customers"
-            existing_cluster_id: 1214-011430-j4lqjjs9
-            depends_on:
-              - task_key: "bronze-customers"
-            notebook_task:
-              notebook_path: "/Repos/kellwyn.edwin@kotahi.co.nz/cicd_with_databricks_GH/src/main/python/silver/call_transform_to_scd2"
-              base_parameters:
-                env: ""
-          - task_key: "aggregation-gold"
-            existing_cluster_id: 1214-011430-j4lqjjs9
-            depends_on:
-              - task_key: "standardize-silver"
-              - task_key: "scd2-silver-customers"
-            notebook_task:
-              notebook_path: "/Repos/kellwyn.edwin@kotahi.co.nz/cicd_with_databricks_GH/src/main/python/gold/gold_layer_etl_main"
-              base_parameters:
-                env: ""
+          depends_on:
+            - task_key: "setup-tables"          
+          notebook_task:
+            notebook_path: "/Repos/kellwyn.edwin@kotahi.co.nz/cicd_with_databricks_GH/src/main/python/bronze/load_bronze_tables"
+            base_parameters:
+              source_dataset: "customers"
+              num_rows: "10000"
+              env: ""
+        - task_key: "bronze-orders"
+          existing_cluster_id: 1214-011430-j4lqjjs9
+          depends_on:
+            - task_key: "setup-tables"
+          notebook_task:
+            notebook_path: "/Repos/kellwyn.edwin@kotahi.co.nz/cicd_with_databricks_GH/src/main/python/bronze/load_bronze_tables"
+            base_parameters:
+              source_dataset: "orders"
+              num_rows: "10000"
+              env: ""
+        - task_key: "bronze-products"
+          existing_cluster_id: 1214-011430-j4lqjjs9
+          depends_on:
+            - task_key: "setup-tables"
+          notebook_task:
+            notebook_path: "/Repos/kellwyn.edwin@kotahi.co.nz/cicd_with_databricks_GH/src/main/python/bronze/load_bronze_tables"
+            base_parameters:
+              source_dataset: "products"
+              num_rows: "10000"
+              env: ""
+        - task_key: "bronze-sales"
+          existing_cluster_id: 1214-011430-j4lqjjs9
+          depends_on:
+            - task_key: "setup-tables" 
+          notebook_task:
+            notebook_path: "/Repos/kellwyn.edwin@kotahi.co.nz/cicd_with_databricks_GH/src/main/python/bronze/load_bronze_tables"
+            base_parameters:
+              source_dataset: "sales"
+              num_rows: "10000"
+              env: ""
+        - task_key: "standardize-silver"
+          existing_cluster_id: 1214-011430-j4lqjjs9
+          depends_on:
+            - task_key: "bronze-products"
+            - task_key: "bronze-sales"
+            - task_key: "bronze-orders"
+          notebook_task:
+            notebook_path: "/Repos/kellwyn.edwin@kotahi.co.nz/cicd_with_databricks_GH/src/main/python/silver/call_standardise_retail_dataset"
+            base_parameters:
+              env: ""
+        - task_key: "scd2-silver-customers"
+          existing_cluster_id: 1214-011430-j4lqjjs9
+          depends_on:
+            - task_key: "bronze-customers"
+          notebook_task:
+            notebook_path: "/Repos/kellwyn.edwin@kotahi.co.nz/cicd_with_databricks_GH/src/main/python/silver/call_transform_to_scd2"
+            base_parameters:
+              env: ""
+        - task_key: "aggregation-gold"
+          existing_cluster_id: 1214-011430-j4lqjjs9
+          depends_on:
+            - task_key: "standardize-silver"
+            - task_key: "scd2-silver-customers"
+          notebook_task:
+            notebook_path: "/Repos/kellwyn.edwin@kotahi.co.nz/cicd_with_databricks_GH/src/main/python/gold/gold_layer_etl_main"
+            base_parameters:
+              env: ""
 targets:
   prod:
     default: true
